@@ -53,51 +53,84 @@ const Appointment = () => {
   }, [])
 
   return (
-    <SafeAreaView style={{ flex: 1 }}>
-      <View style={{ flex: 1, marginTop: 30, marginHorizontal: 20 }}>
-        <View style={{ flex: 0.5,marginBottom:30, }}>
+    // <SafeAreaView>
+      <View style={[styles.mainBody]}>
+        
+        <View style={{ flex: 1,}}>
           <Text style={[styles.main_heading]}>Your Appointments</Text>
         </View>
 
         <View style={{ flex: 1 }}>
-          <View style={{ flexDirection: "row" }}>
-            <Pressable style={{shadowColor: '#52006A', elevation: 2, shadowRadius:2, paddingVertical: 15, width: "49%",alignItems:"center",borderRadius:2,}}>
+          <View style={{ flexDirection: "row", marginVertical:10 }}>
+            <Pressable style={[styles.upcomingApptBtn,{shadowColor: '#52006A', elevation: 1, shadowRadius:1,}]}>
               <Text style={{ color: '#546BF6', fontWeight: "bold" }}>Upcoming</Text>
             </Pressable>
-            <Pressable style={{ marginTop: 2, paddingVertical: 15,  width: "49%",alignItems:"center", backgroundColor: '#eeeff5',borderRadius:4 }}>
+            <Pressable style={[styles.upcomingApptBtn,{backgroundColor: '#eeeff5',}]}>
               <Text underlayColor={"white"} style={[styles.text]}>Past</Text>
             </Pressable>
           </View>
         </View>
+
         <ScrollView decelerationRate="fast" horizontal>
           {upcomingAppointments.map((source) => (
-
-
-            <View key={source} style={{ flex: 4, backgroundColor: "#4E4EF5", width:305, marginBottom: 80, marginHorizontal:20, borderRadius: 8 }}>
+            <View key={source} style={[styles.appointmentCard,{ flex: 4}]}>
               <View style={{ margin: 25 }}>
                 <Text style={{ color: '#c3c8d1', fontWeight: 'bold' }}>In 3 days</Text>
                 <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 24, paddingVertical: 10 }}>Consultation with {source.doctorname}</Text>
-                <Text style={{ color: 'white', paddingVertical: 10 }}><Ionicons name='calendar-outline' size={24} color="white" /> {source.selectedDay.month} {source.selectedDay.day}</Text>
-                <Text style={{ color: 'white', paddingVertical: 10 }}><Ionicons name='time' size={24} color="white" /> {source.selectedTime} </Text>
-                <Text style={{ color: 'white', paddingVertical: 10 }}><Ionicons name='location' size={24} color="white" /> {source.address} </Text>
-                <Text style={{ color: 'white', paddingVertical: 10 }}><Ionicons name='call' size={24} color="white" /> {source.contactNumber} </Text>
-                <TouchableHighlight style={{ borderColor: "white", borderRadius: 6, borderWidth: 1, width: 130, height: 40, marginTop: 40, paddingTop: 8 }}><Text style={{ color: "white", textAlign: 'center', fontWeight: 'bold' }}>RESCHEDULE</Text></TouchableHighlight>
+                <Text style={[styles.appointmentCardDetails]}><Ionicons name='calendar-outline' size={24} color="white" /> {source.selectedDay.month} {source.selectedDay.day}</Text>
+                <Text style={[styles.appointmentCardDetails]}><Ionicons name='time' size={24} color="white" /> {source.selectedTime} </Text>
+                <Text style={[styles.appointmentCardDetails]}><Ionicons name='location' size={24} color="white" /> {source.address} </Text>
+                <Text style={[styles.appointmentCardDetails]}><Ionicons name='call' size={24} color="white" /> {source.contactNumber} </Text>
+                <TouchableHighlight style={[styles.rescheduleBtn]}><Text style={{ color: "white", textAlign: 'center', fontWeight: 'bold' }}>RESCHEDULE</Text></TouchableHighlight>
               </View>
             </View>
           ))}
         </ScrollView>
 
       </View>
-    </SafeAreaView>
+    // </SafeAreaView>
   );
 };
 
 export default Appointment;
 
 const styles = StyleSheet.create({
+  mainBody: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    margin:"5%"
+  },
   main_heading: {
     fontSize: 30,
     fontWeight: 'bold',
     color: "#0d233c",
+  },
+  upcomingApptBtn:{
+    width: "50%",
+    aspectRatio: 10 / 2.5,
+    justifyContent:'center',
+    alignItems:"center", 
+    borderRadius:4, 
+  },
+  appointmentCard:{
+    backgroundColor: "#4E4EF5",
+    width:305, 
+    marginVertical:40,
+    marginHorizontal:20,
+    borderRadius: 8 
+  },
+  appointmentCardDetails:{
+    color: 'white',
+    paddingVertical: 10
+  },
+  rescheduleBtn:{
+    borderColor: "white", 
+    borderRadius: 6, 
+    borderWidth: 1, 
+    width: 130,
+    height: 40, 
+    marginTop: 40, 
+    paddingTop: 8 
   }
 })
