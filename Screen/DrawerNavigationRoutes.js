@@ -32,7 +32,7 @@ function MyTabs() {
       }}
       />
       <Tab.Screen 
-      name=" " 
+      name="AddAppointment" 
       component={AddAppointment} 
       options={{
         tabBarIcon: () => (<Image

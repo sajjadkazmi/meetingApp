@@ -11,6 +11,7 @@ import SplashScreen from './Screen/SplashScreen';
 import LoginScreen from './Screen/LoginScreen';
 import RegisterScreen from './Screen/RegisterScreen';
 import DrawerNavigationRoutes from './Screen/DrawerNavigationRoutes';
+import ClientLogin from './Screen/ClientLogin';
  
 const Stack = createStackNavigator();
 
@@ -28,8 +29,8 @@ const Auth = () => {
   return (
     <Stack.Navigator initialRouteName="LoginScreen">
       <Stack.Screen
-        name="LoginScreen"
-        component={LoginScreen}
+        name="ClientLogin"
+        component={ClientLogin}
         options={{headerShown: false}}
       />
       <Stack.Screen
