@@ -16,7 +16,7 @@ const Tab = createBottomTabNavigator();
 
 function MyTabs() {
   return (
-    <Tab.Navigator screenOptions={{ headerShown: false}}>
+    <Tab.Navigator screenOptions={{ headerShown: false,tabBarShowLabel:false }}>
       <Tab.Screen 
       name="Appointment" 
       component={Appointment} 
@@ -36,7 +36,7 @@ function MyTabs() {
       component={AddAppointment} 
       options={{
         tabBarIcon: () => (<Image
-          style={{height:55,width:55,marginBottom:5}}
+          style={{height:60,width:55,marginBottom:20}}
           source={require("../Image/add-icons.png")}
         />)
     }}
