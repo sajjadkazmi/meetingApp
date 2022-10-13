@@ -54,7 +54,7 @@ const AddAppointment = ({ route, navigation }) => {
 
 
     useEffect(() => {
-        // setQuestion(1);
+        setQuestion(1);
         console.log("propssss", route.params)
 
         if (route.params != undefined) {
@@ -123,7 +123,7 @@ const AddAppointment = ({ route, navigation }) => {
             } else {
                 Alert.alert("Congratulations!", "Appointment is Rescheduled", [{
                     text: "OK", onPress: () => {
-                        navigation.replace('DrawerNavigationRoutes');
+                        navigation.navigate('Appointment', { IsDataChanged: true })
                     }
                 }],
                     {
@@ -150,7 +150,7 @@ const AddAppointment = ({ route, navigation }) => {
             } else {
                 Alert.alert("Congratulations!", "Appointment is successfully booked", [{
                     text: "OK", onPress: () => {
-                        navigation.replace('DrawerNavigationRoutes');
+                        navigation.navigate('Appointment', { IsDataChanged: true })
                     }
                 }],
                     {
@@ -159,9 +159,10 @@ const AddAppointment = ({ route, navigation }) => {
                 );
             }
         }
-
-
-
+        setQuestion(1);
+        setdoctorId('');
+        setserviceId('');
+        setdate('');
 
     }
     const getAvailableSlots = async () => {
@@ -187,12 +188,12 @@ const AddAppointment = ({ route, navigation }) => {
         <View style={{ flex: 1, padding: 16 }}>
             <Loader loading={loading} />
 
-            <View style={{ flex: 1 }}>
+            <View style={{ flex: 0.5 }}>
                 <Text style={[styles.main_heading]}>Book Appointment</Text>
                 <Text style={{ fontWeight: "bold", color: "#b5bbc5" }}>Sajjad Kazmi</Text>
             </View>
 
-            <View style={[{ flex: 8 }, styles.card, styles.shadowProp]}>
+            <View style={[{ flex: 4 }, styles.card, styles.shadowProp]}>
 
                 {question == 1 && (
                     <View>
@@ -242,7 +243,6 @@ const AddAppointment = ({ route, navigation }) => {
                                     setdate(day.dateString);
                                     getAvailableSlots(day.dateString);
                                 }}
-                                style={styles.calendar}
                                 hideExtraDays
                                 markedDates={{ [date]: { selected: true, marked: true, selectedColor: '#597ef6' } }}
                                 theme={{
@@ -254,7 +254,6 @@ const AddAppointment = ({ route, navigation }) => {
                         </View>
                         <View>
                             <Text style={styles.questionBox}>AVAILABLE SLOTS</Text>
-
                             <View style={{ flexDirection: 'row', flexWrap: 'wrap', }} >
                                 {slots == undefined || slots.length == 0 ? (
                                     <View><Text style={{ fontWeight: "bold", justifyContent: "center", textAlign: "center" }}>No Slots available</Text></View>
@@ -265,13 +264,12 @@ const AddAppointment = ({ route, navigation }) => {
                                                 underlayColor="#5673f6"
                                                 onPress={() => settimeslot(item.time)}
                                                 style={[styles.availableSlotBox, timeslot == item.time ? styles.activeColor : styles.inactiveColor]}>
-                                                <Text style={[timeslot == item.time ? styles.activeFontColor : styles.InactiveFontColor, { fontWeight: 'bold' }]}>{item.time}</Text>
+                                                <Text style={[timeslot == item.time ? styles.activeFontColor : styles.InactiveFontColor, { fontWeight: 'bold' }]}>{item.time.slice(0, -3)}</Text>
                                             </TouchableHighlight>
                                         </View>
                                     ))
                                 }
                             </View>
-
                         </View>
                     </View>
                 )}
@@ -279,14 +277,14 @@ const AddAppointment = ({ route, navigation }) => {
             </View>
             <View ><Text style={{ color: "#b5bbc5", textAlign: "center", fontWeight: "600" }}>{question} of 4</Text></View>
 
-            <View style={[{ flex: 1 }, styles.card, styles.footer]}>
+            <View style={[{ flex: 0.4 }, styles.card, styles.footer]}>
                 <View style={{ flexDirection: "row" }}>
                     <TouchableHighlight underlayColor={"#556ff6"} style={[styles.button]} onPress={() => setQuestion(question != 1 ? question - 1 : 1)}>
                         <Text underlayColor={"white"} style={[styles.text]}>BACK</Text>
                     </TouchableHighlight>
                     {question == 3 ? (
                         <TouchableHighlight underlayColor={"#556ff6"} style={[styles.button]} onPress={SubmitAppointment}>
-                            <Text style={[styles.text]}>SUBMIT</Text>
+                            <Text style={[styles.text]}>BOOK</Text>
                         </TouchableHighlight>
                     ) : (
 
@@ -389,9 +387,13 @@ const styles = StyleSheet.create({
     },
     availableSlotBox: {
         margin: 4,
-        padding: 4,
+        paddingVertical: 4,
+        paddingHorizontal: 6,
         backgroundColor: "white",
-        borderRadius: 2
+        borderRadius: 4,
+        borderColor: '#EEEFF5',
+        borderWidth: 1,
+
     },
     questionBox: {
         color: "#c3c8d1",

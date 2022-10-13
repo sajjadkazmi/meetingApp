@@ -44,6 +44,7 @@ const Appointment = ({ route,navigation }) => {
   )
   const [appointments, setappointments] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [canceled, setcanceled] = useState(false);
 
 
 
@@ -54,7 +55,6 @@ const Appointment = ({ route,navigation }) => {
     async function fetchData() {
       const ress = await AsyncStorage.getItem('user_id')
       const client = JSON.parse(ress);
-      console.log("valuess", client.id)
 
       setLoading(true);
       let response = await Global.fetchpost("GET",
@@ -77,7 +77,7 @@ const Appointment = ({ route,navigation }) => {
     }
     fetchData();
 
-  }, loading)
+  },[route.params,canceled])
 
   const deleteAppointment = async (deleteId) => {
     console.log("delete id", deleteId);
@@ -102,20 +102,15 @@ const Appointment = ({ route,navigation }) => {
 
     const callDeleteApi = async (deleteId) => {
       setLoading(true);
+      setcanceled(true)
       // doctors list fetching starts
       let response = await Global.fetchpost("DELETE",
         `https://user-api-v2.simplybook.me/admin/bookings/${deleteId}`
       );
       let res = await response.json();
       console.log("json response", res);
+      console.log("ssss",canceled)
       setLoading(false);
-
-      // if (res.data) {
-      //   setDoctorList(res.data)
-      // }
-      // else {
-       
-      // }
     }
   }
   const checkAppointments = () => {
@@ -143,7 +138,7 @@ const Appointment = ({ route,navigation }) => {
 
       <ScrollView pagingEnabled contentContainerStyle={{ flexGrow: 1 }} decelerationRate="fast" horizontal showsHorizontalScrollIndicator={false} >
         {appointments == undefined || appointments.length == 0 ? (
-          <LinearGradient colors={['#5a85f6', '#5366f5', '#4c47f5']} style={{ width: "90%", marginVertical: 40, marginHorizontal: 20, borderRadius: 8 }}>
+          <LinearGradient colors={['#5a85f6', '#5366f5', '#4c47f5']} style={{ width: "90%",height:"30%", marginVertical: 40, marginHorizontal: 20, borderRadius: 8 }}>
             <View style={{ margin: 25 }}>
               <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 24, paddingVertical: 10, textAlign: 'center' }}>No Appointments yet</Text>
             </View>
