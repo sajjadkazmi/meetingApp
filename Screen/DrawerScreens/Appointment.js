@@ -8,8 +8,7 @@ import Loader from '../Components/Loader';
 import Global from '../Components/Global';
 import CustomSwitch from '../Components/CustomSwitch';
 
-const { width } = Dimensions.get("window");
-const height = width * 0.6;
+const screenWidth = Dimensions.get('window').width;
 
 const Appointment = ({ route, navigation }) => {
   const [upcomingAppointments, setupcomingAppointments] = useState(
@@ -44,12 +43,8 @@ const Appointment = ({ route, navigation }) => {
   const [appointments, setappointments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [canceled, setcanceled] = useState(false);
-
-
-
-
+  const [pastAppointments, setpastAppointments] = useState(false);
   useEffect(() => {
-
 
     async function fetchData() {
       const ress = await AsyncStorage.getItem('user_id')
@@ -116,27 +111,35 @@ const Appointment = ({ route, navigation }) => {
   const onSelectSwitch = async (index) => {
     // alert('Selected index: ' + index);
 
-    const ress = await AsyncStorage.getItem('user_id')
-    const client = JSON.parse(ress);
+    if (index == 1) {
+      setpastAppointments(false)
 
-    setLoading(true);
-    let response = await Global.fetchpost("GET",
-      `https://user-api-v2.simplybook.me/admin/bookings?filter[client_id]=${client.id}`
-    );
-    let res = await response.json();
-    console.log("json response", res.data);
-    setLoading(false);
+      const ress = await AsyncStorage.getItem('user_id')
+      const client = JSON.parse(ress);
 
-    if (res.data) {
-      setappointments(res.data);
-    }
-    else {
-      Alert.alert("", "Something went wrong!", [{ text: "OK", onPress: () => { } }],
-        {
-          cancelable: false,
-        }
+      setLoading(true);
+      let response = await Global.fetchpost("GET",
+        `https://user-api-v2.simplybook.me/admin/bookings?filter[client_id]=${client.id}`
       );
+      let res = await response.json();
+      console.log("json response", res.data);
+      setLoading(false);
+
+      if (res.data) {
+        setappointments(res.data);
+      }
+      else {
+        Alert.alert("", "Something went wrong!", [{ text: "OK", onPress: () => { } }],
+          {
+            cancelable: false,
+          }
+        );
+      }
     }
+    else{
+      setpastAppointments(true)
+    }
+
   };
 
   return (
@@ -159,20 +162,22 @@ const Appointment = ({ route, navigation }) => {
         </View>
       </View>
 
-      <ScrollView pagingEnabled contentContainerStyle={{ flexGrow: 1 }} decelerationRate="fast" horizontal showsHorizontalScrollIndicator={false} >
-        {appointments == undefined || appointments.length == 0 ? (
+      <ScrollView pagingEnabled contentContainerStyle={{ flexGrow: 1 }} decelerationRate="fast" horizontal
+        showsHorizontalScrollIndicator={false}
+      >
+        {appointments == undefined || appointments.length == 0 || pastAppointments ? (
           <LinearGradient colors={['#5a85f6', '#5366f5', '#4c47f5']} style={{ width: "90%", height: "25%", marginVertical: 40, marginHorizontal: 20, borderRadius: 8 }}>
             <View style={{ margin: 25 }}>
-              <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 24, paddingVertical: 10, textAlign: 'center' }}>No Appointments yet</Text>
+              <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 24, paddingVertical: 10, textAlign: 'center' }}>No Appointments</Text>
             </View>
           </LinearGradient>
 
         )
           :
-          appointments.map((source,index) => (
+          appointments.map((source, index) => (
             <>
               <View >
-              <Text style={{ color: "#b5bbc5", textAlign: "center", fontWeight: "600" }}>{index + 1} of {appointments.length}</Text>
+                <Text style={{ color: "#b5bbc5", textAlign: "center", fontWeight: "600" }}>{index + 1} of {appointments.length}</Text>
 
                 <LinearGradient colors={['#5a85f6', '#5366f5', '#4c47f5']} key={source} style={[styles.appointmentCard]}>
                   <View style={{ margin: 25 }}>
@@ -205,7 +210,7 @@ const Appointment = ({ route, navigation }) => {
                 </LinearGradient>
               </View>
             </>
-          ))
+          )).reverse()
 
         }
       </ScrollView>
@@ -237,8 +242,8 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   appointmentCard: {
-    // backgroundColor: "",
-    width: 300,
+    backgroundColor: "",
+    width: screenWidth - 82,
     marginVertical: 20,
     marginHorizontal: 20,
     borderRadius: 8

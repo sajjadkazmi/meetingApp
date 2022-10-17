@@ -27,15 +27,15 @@ const ClientLogin = ({ navigation }) => {
     const handleSubmitPress = async() => {
         setErrortext('');
         if (!name) {
-            alert('Please fill Password');
+            alert('Please fill your name');
             return;
         }
         if (!userEmail) {
-            alert('Please fill Email');
+            alert('Please fill your email');
             return;
         }
         if (!phone) {
-            alert('Please fill Password');
+            alert('Please fill your phone number');
             return;
         }
         let dataToSend = { email: userEmail, name: name, phone: phone };
@@ -129,7 +129,7 @@ const ClientLogin = ({ navigation }) => {
                                 placeholder="Enter Phone" //dummy@abc.com
                                 placeholderTextColor="#8b9cb5"
                                 autoCapitalize="none"
-                                keyboardType="email-address"
+                                keyboardType="numeric"
                                 returnKeyType="next"
                                 onSubmitEditing={() =>
                                     passwordInputRef.current &&
@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     mainBody: {
         flex: 1,
         justifyContent: 'center',
-        backgroundColor: '#307ecc',
+        backgroundColor: '#eff1f3',
         alignContent: 'center',
     },
     SectionStyle: {
@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
         margin: 10,
     },
     buttonStyle: {
-        backgroundColor: '#7DE24E',
+        backgroundColor: '#223943',
         borderWidth: 0,
         color: '#FFFFFF',
         borderColor: '#7DE24E',
@@ -198,20 +198,22 @@ const styles = StyleSheet.create({
     },
     inputStyle: {
         flex: 1,
-        color: 'white',
+        color: '#a1a1a1',
         paddingLeft: 15,
         paddingRight: 15,
-        borderWidth: 1,
-        borderRadius: 30,
+        borderWidth: 3,
+        borderRadius: 10,
         borderColor: '#dadae8',
+        fontWeight:'bold'
     },
     registerTextStyle: {
-        color: '#FFFFFF',
+        color: '#1b1b1b',
         textAlign: 'center',
         fontWeight: 'bold',
         fontSize: 14,
         alignSelf: 'center',
         padding: 10,
+        
     },
     errorTextStyle: {
         color: 'red',

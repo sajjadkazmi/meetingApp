@@ -256,18 +256,16 @@ const AddAppointment = ({ route, navigation }) => {
                 {question == 3 && (
                     <View>
                         <View>
-                            <Text style={styles.questionBox}>SELECT DATE</Text>
+                            <Text style={styles.questionBox}>SELECT DATE & SLOT</Text>
                             <Calendar
-                                //   onDayPress={this.onDayPress(day)}
-                                underlayColor="#5672F6"
-                                onDayPress={day => { getAvailableSlots(day.dateString); }}
-                                hideExtraDays
-                                markedDates={{ [date]: { selected: true, marked: true, selectedColor: '#597ef6' } }}
-                                theme={{
-                                    selectedDayBackgroundColor: 'green',
-                                    todayTextColor: 'green',
-                                    arrowColor: 'green',
+                                onMonthChange={month => {
+                                    setdate('');
+                                    setSlots('');
                                 }}
+                                enableSwipeMonths={true}
+                                onDayPress={day => { console.log(day); getAvailableSlots(day.dateString); }}
+                                markedDates={{ [date]: { selected: true, marked: true, selectedColor: '#597ef6' } }}
+                                hideExtraDays={true}
                             />
                         </View>
                         <View>
@@ -358,8 +356,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     button: {
-        alignItems: 'center',
-        justifyContent: 'center',
+        // alignItems: 'center',
+        // justifyContent: 'center',
         paddingVertical: 12,
         width: "47%",
         alignItems: "center",
