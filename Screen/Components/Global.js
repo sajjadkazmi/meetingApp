@@ -7,7 +7,7 @@ const Global = {
             headers: {
                 'Content-Type': 'application/json',
                 "X-Company-Login": "regex1",
-                "X-Token": "88cdec6180eee4ca451a5fc1b3c9ee427093d95cdfa9c5b3836a2e09b24c7fdc"
+                "X-Token": "dabf1f4993bcfa4b3c9a980a35e04de0c6fe1b3475fdb0e22d15c775405c2b46"
             },
             body: body
         });

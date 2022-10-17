@@ -19,7 +19,7 @@ const AddAppointment = ({ route, navigation }) => {
 
     const [loading, setLoading] = useState(false);
 
-    const [slots, setSlots] = useState();
+    const [slots, setSlots] = useState([]);
     const [doctorList, setDoctorList] = useState([
 
     ])
@@ -57,7 +57,7 @@ const AddAppointment = ({ route, navigation }) => {
         setQuestion(1);
         console.log("propssss", route.params)
 
-        if (route.params != undefined) {
+        if (route.params && route.params.appointment_id != null) {
             var str = route.params.start_time;
             var date = str.slice(0, 10);
 
@@ -93,84 +93,106 @@ const AddAppointment = ({ route, navigation }) => {
     }, [route.params])
 
     const handleSubmitPress = () => {
-        setQuestion(question + 1)
-    }
+        if (!doctorId && question == 1) {
+            alert('Please select any doctor');
+            return;
+        }
 
-    const SubmitAppointment = async () => {
-
-        const response = await AsyncStorage.getItem('user_id')
-        const user_response_parsed = JSON.parse(response);
-        console.log("valuess", timeslot, date, serviceId, doctorId, user_response_parsed)
-
-        let dataToSend = { start_datetime: date + ' ' + timeslot, provider_id: doctorId, service_id: serviceId, client_id: user_response_parsed.id };
-
-
-        if (route.params != undefined && route.params.appointment_id) {
-            console.log("inside edit booking")
-            setLoading(true);
-            let respbooking = await Global.fetchpost("PUT",
-                `https://user-api-v2.simplybook.me/admin/bookings/${route.params.appointment_id}`,
-                JSON.stringify(dataToSend)
-
-            );
-            let res = await respbooking.json();
-            console.log("json response", res);
-            setLoading(false);
-            if (res.code == 400) {
-                alert('Something went wrong')
-
-                console.log('Something went worng', res);
-            } else {
-                Alert.alert("Congratulations!", "Appointment is Rescheduled", [{
-                    text: "OK", onPress: () => {
-                        navigation.navigate('Appointment', { IsDataChanged: true })
-                    }
-                }],
-                    {
-                        cancelable: false,
-                    }
-                );
-            }
+        if (!serviceId && question == 2) {
+            alert('Please select any Service');
+            return;
         }
         else {
-            setLoading(true);
-            let respbooking = await Global.fetchpost("POST",
-                "https://user-api-v2.simplybook.me/admin/bookings",
-                JSON.stringify(dataToSend)
-
-            );
-            let res = await respbooking.json();
-            console.log("json response", res.data);
-            setLoading(false);
-
-            if (res.code == 400) {
-                alert('Something went wrong')
-
-                console.log('Something went worng', res);
-            } else {
-                Alert.alert("Congratulations!", "Appointment is successfully booked", [{
-                    text: "OK", onPress: () => {
-                        navigation.navigate('Appointment', { IsDataChanged: true })
-                    }
-                }],
-                    {
-                        cancelable: false,
-                    }
-                );
-            }
+            setQuestion(question + 1)
         }
-        setQuestion(1);
-        setdoctorId('');
-        setserviceId('');
-        setdate('');
 
     }
-    const getAvailableSlots = async () => {
-        setSlots([]);
+    const SubmitAppointment = async () => {
+        if (!date && question == 3) {
+            alert('Please select any Date');
+            return;
+        }
+        if (!timeslot && question == 3) {
+            alert('Please select any Time Slot');
+            return;
+        }
+        else {
+
+            const response = await AsyncStorage.getItem('user_id')
+            const user_response_parsed = JSON.parse(response);
+            console.log("valuess", timeslot, date, serviceId, doctorId, user_response_parsed)
+
+            let dataToSend = { start_datetime: date + ' ' + timeslot, provider_id: doctorId, service_id: serviceId, client_id: user_response_parsed.id };
+
+
+            if (route.params != undefined && route.params.appointment_id) {
+                console.log("inside edit booking")
+                setLoading(true);
+                let respbooking = await Global.fetchpost("PUT",
+                    `https://user-api-v2.simplybook.me/admin/bookings/${route.params.appointment_id}`,
+                    JSON.stringify(dataToSend)
+
+                );
+                let res = await respbooking.json();
+                console.log("json response", res);
+                navigation.setParams({ appointment_id: null })
+                setLoading(false);
+                if (res.code == 400) {
+                    alert('Something went wrong')
+
+                    console.log('Something went worng', res);
+                } else {
+                    Alert.alert("Congratulations!", "Appointment is Rescheduled", [{
+                        text: "OK", onPress: () => {
+                            navigation.navigate('Appointment', { IsDataChanged: true })
+                        }
+                    }],
+                        {
+                            cancelable: false,
+                        }
+                    );
+                }
+            }
+            else {
+                setLoading(true);
+                let respbooking = await Global.fetchpost("POST",
+                    "https://user-api-v2.simplybook.me/admin/bookings",
+                    JSON.stringify(dataToSend)
+
+                );
+                let res = await respbooking.json();
+                console.log("json response", res.data);
+                setLoading(false);
+
+                if (res.code == 400) {
+                    alert('Something went wrong')
+
+                    console.log('Something went worng', res);
+                } else {
+                    Alert.alert("Congratulations!", "Appointment is successfully booked", [{
+                        text: "OK", onPress: () => {
+                            navigation.navigate('Appointment', { IsDataChanged: true })
+                        }
+                    }],
+                        {
+                            cancelable: false,
+                        }
+                    );
+                }
+            }
+            setQuestion(1);
+            setdoctorId('');
+            setserviceId('');
+            setdate('');
+        }
+
+    }
+    const getAvailableSlots = async (selectedDate) => {
+        setdate(selectedDate);
 
         setLoading(true);
         let response = await Global.fetchpost("GET",
-            `https://user-api-v2.simplybook.me/admin/schedule/available-slots?date=${date}&provider_id=${doctorId}&service_id=${serviceId}`
+            `https://user-api-v2.simplybook.me/admin/schedule/available-slots?date=${selectedDate}&provider_id=${doctorId}&service_id=${serviceId}`
         );
         let res = await response.json();
         console.log("json response", res);
@@ -238,11 +260,7 @@ const AddAppointment = ({ route, navigation }) => {
                             <Calendar
                                 //   onDayPress={this.onDayPress(day)}
                                 underlayColor="#5672F6"
-                                onDayPress={day => {
-                                    console.log('selected day', day.dateString);
-                                    setdate(day.dateString);
-                                    getAvailableSlots(day.dateString);
-                                }}
+                                onDayPress={day => { getAvailableSlots(day.dateString); }}
                                 hideExtraDays
                                 markedDates={{ [date]: { selected: true, marked: true, selectedColor: '#597ef6' } }}
                                 theme={{
