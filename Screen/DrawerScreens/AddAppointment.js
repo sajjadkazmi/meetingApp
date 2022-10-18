@@ -14,15 +14,10 @@ const AddAppointment = ({ route, navigation }) => {
     const [doctorId, setdoctorId] = useState('');
     const [serviceId, setserviceId] = useState('');
     const [timeslot, settimeslot] = useState('');
-
     const [date, setdate] = useState('');
-
     const [loading, setLoading] = useState(false);
-
     const [slots, setSlots] = useState([]);
-    const [doctorList, setDoctorList] = useState([
-
-    ])
+    const [doctorList, setDoctorList] = useState([])
     const [servicesList, setservicesList] = useState([
         {
             id: "1",
@@ -55,21 +50,16 @@ const AddAppointment = ({ route, navigation }) => {
 
     useEffect(() => {
         setQuestion(1);
-        console.log("propssss", route.params)
-
         if (route.params && route.params.appointment_id != null) {
             var str = route.params.start_time;
             var date = str.slice(0, 10);
-
             setdoctorId(route.params.provider_id);
             setserviceId(route.params.service_id);
             setdate(date);
-
         }
 
         async function fetchData() {
             setLoading(true);
-            // doctors list fetching starts
             let response = await Global.fetchpost("GET",
                 "https://user-api-v2.simplybook.me/admin/providers"
             );
@@ -87,7 +77,6 @@ const AddAppointment = ({ route, navigation }) => {
                     }
                 );
             }
-            // doctors list fetching ends
         }
         fetchData();
     }, [route.params])
@@ -117,21 +106,17 @@ const AddAppointment = ({ route, navigation }) => {
             return;
         }
         else {
-
             const response = await AsyncStorage.getItem('user_id')
             const user_response_parsed = JSON.parse(response);
             console.log("valuess", timeslot, date, serviceId, doctorId, user_response_parsed)
 
             let dataToSend = { start_datetime: date + ' ' + timeslot, provider_id: doctorId, service_id: serviceId, client_id: user_response_parsed.id };
-
-
             if (route.params != undefined && route.params.appointment_id) {
                 console.log("inside edit booking")
                 setLoading(true);
                 let respbooking = await Global.fetchpost("PUT",
                     `https://user-api-v2.simplybook.me/admin/bookings/${route.params.appointment_id}`,
                     JSON.stringify(dataToSend)
-
                 );
                 let res = await respbooking.json();
                 console.log("json response", res);
@@ -158,12 +143,10 @@ const AddAppointment = ({ route, navigation }) => {
                 let respbooking = await Global.fetchpost("POST",
                     "https://user-api-v2.simplybook.me/admin/bookings",
                     JSON.stringify(dataToSend)
-
                 );
                 let res = await respbooking.json();
                 console.log("json response", res.data);
                 setLoading(false);
-
                 if (res.code == 400) {
                     alert('Something went wrong')
 
@@ -185,11 +168,9 @@ const AddAppointment = ({ route, navigation }) => {
             setserviceId('');
             setdate('');
         }
-
     }
     const getAvailableSlots = async (selectedDate) => {
         setdate(selectedDate);
-
         setLoading(true);
         let response = await Global.fetchpost("GET",
             `https://user-api-v2.simplybook.me/admin/schedule/available-slots?date=${selectedDate}&provider_id=${doctorId}&service_id=${serviceId}`
@@ -209,14 +190,11 @@ const AddAppointment = ({ route, navigation }) => {
     return (
         <View style={{ flex: 1, padding: 16 }}>
             <Loader loading={loading} />
-
             <View style={{ flex: 0.5 }}>
                 <Text style={[styles.main_heading]}>Book Appointment</Text>
                 <Text style={{ fontWeight: "bold", color: "#b5bbc5" }}>Sajjad Kazmi</Text>
             </View>
-
             <View style={[{ flex: 4 }, styles.card, styles.shadowProp]}>
-
                 {question == 1 && (
                     <View>
                         <Text style={styles.questionBox}>SELECT A DOCTOR</Text>
@@ -232,7 +210,6 @@ const AddAppointment = ({ route, navigation }) => {
                                 </TouchableHighlight>
                             </View>
                         ))}
-
                     </View>
                 )}
                 {question == 2 && (
@@ -289,10 +266,8 @@ const AddAppointment = ({ route, navigation }) => {
                         </View>
                     </View>
                 )}
-
             </View>
             <View ><Text style={{ color: "#b5bbc5", textAlign: "center", fontWeight: "600" }}>{question} of 4</Text></View>
-
             <View style={[{ flex: 0.4 }, styles.card, styles.footer]}>
                 <View style={{ flexDirection: "row" }}>
                     <TouchableHighlight underlayColor={"#556ff6"} style={[styles.button]} onPress={() => setQuestion(question != 1 ? question - 1 : 1)}>
@@ -308,11 +283,8 @@ const AddAppointment = ({ route, navigation }) => {
                             <Text style={[styles.text]}>NEXT</Text>
                         </TouchableHighlight>
                     )}
-
                 </View>
-
             </View>
-
         </View>
     );
 };
@@ -338,7 +310,6 @@ const styles = StyleSheet.create({
         elevation: 8,
 
     },
-
     category_box: {
         backgroundColor: "white",
         margin: 6,
@@ -356,8 +327,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     button: {
-        // alignItems: 'center',
-        // justifyContent: 'center',
         paddingVertical: 12,
         width: "47%",
         alignItems: "center",
@@ -409,7 +378,6 @@ const styles = StyleSheet.create({
         borderRadius: 4,
         borderColor: '#EEEFF5',
         borderWidth: 1,
-
     },
     questionBox: {
         color: "#c3c8d1",
